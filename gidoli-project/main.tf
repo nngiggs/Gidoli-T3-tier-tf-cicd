@@ -1,8 +1,8 @@
 # --- root/main.tf ---
 
-provider "aws" {
-  region = local.location
-}
+# provider "aws" {
+#   region = local.location
+# }
 
 locals {
   cwd           = reverse(split("/", path.cwd))
@@ -13,28 +13,28 @@ locals {
 }
 
 module "networking" {
-  source            = "../modules/networking"
-  vpc_cidr          = local.vpc_cidr
-  access_ip         = var.access_ip
-  public_sn_count   = 2
-  private_sn_count  = 2
-  db_subnet_group   = true
-  availabilityzone  = "us-east-1a"
-  azs               = 2
+  source           = "../modules/networking"
+  vpc_cidr         = local.vpc_cidr
+  access_ip        = var.access_ip
+  public_sn_count  = 2
+  private_sn_count = 2
+  db_subnet_group  = true
+  availabilityzone = "us-east-1a"
+  azs              = 2
 }
 
 module "compute" {
-  source                  = "../modules/compute"
-  frontend_app_sg         = module.networking.frontend_app_sg
-  backend_app_sg          = module.networking.backend_app_sg
-  bastion_sg              = module.networking.bastion_sg
-  public_subnets          = module.networking.public_subnets
-  private_subnets         = module.networking.private_subnets
-  bastion_instance_count  = 1
-  instance_type           = local.instance_type
-  key_name                = "Three-Tier-Terraform"
-  lb_tg_name              = module.loadbalancing.lb_tg_name
-  lb_tg                   = module.loadbalancing.lb_tg
+  source                 = "../modules/compute"
+  frontend_app_sg        = module.networking.frontend_app_sg
+  backend_app_sg         = module.networking.backend_app_sg
+  bastion_sg             = module.networking.bastion_sg
+  public_subnets         = module.networking.public_subnets
+  private_subnets        = module.networking.private_subnets
+  bastion_instance_count = 1
+  instance_type          = local.instance_type
+  key_name               = "Three-Tier-Terraform"
+  lb_tg_name             = module.loadbalancing.lb_tg_name
+  lb_tg                  = module.loadbalancing.lb_tg
 }
 
 module "database" {
@@ -52,14 +52,14 @@ module "database" {
 }
 
 module "loadbalancing" {
-  source                  = "../modules/loadbalancing"
-  lb_sg                   = module.networking.lb_sg
-  public_subnets          = module.networking.public_subnets
-  tg_port                 = 80
-  tg_protocol             = "HTTP"
-  vpc_id                  = module.networking.vpc_id
-  app_asg                 = module.compute.app_asg
-  listener_port           = 80
-  listener_protocol       = "HTTP"
-  azs                     = 2
+  source            = "../modules/loadbalancing"
+  lb_sg             = module.networking.lb_sg
+  public_subnets    = module.networking.public_subnets
+  tg_port           = 80
+  tg_protocol       = "HTTP"
+  vpc_id            = module.networking.vpc_id
+  app_asg           = module.compute.app_asg
+  listener_port     = 80
+  listener_protocol = "HTTP"
+  azs               = 2
 }
