@@ -145,7 +145,7 @@ resource "aws_security_group" "three_tier_bastion_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.access_ip]
+    # cidr_blocks = [var.access_ip]
   }
 
   egress {

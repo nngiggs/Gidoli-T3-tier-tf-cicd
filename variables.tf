@@ -1,8 +1,8 @@
 # --- root/variables.tf ---
 
-variable "access_ip" {
-  type = string
-}
+# variable "access_ip" {
+#   type = string
+# }
 
 variable "db_name" {
   type = string
